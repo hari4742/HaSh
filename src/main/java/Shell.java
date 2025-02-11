@@ -226,8 +226,6 @@ public class Shell {
                     else
                         break;
                 }
-
-                continue;
             } else if (ch == '\'') {
                 // add everything untill another next single quote appears
                 i++;
@@ -242,11 +240,33 @@ public class Shell {
                     sb.append(ch);
                     i++;
                 }
-                continue;
-            }
+            } else if (ch == '\"') {
+                i++;
+                boolean isEscaped = false;
+                while (i < input.length() - 1) {
+                    ch = input.charAt(i);
 
-            sb.append(ch);
-            i++;
+                    if (!isEscaped && ch == '\"') {
+                        i++;
+                        break;
+                    }
+
+                    if (!isEscaped && ch == '\\') {
+                        isEscaped = true;
+                        i++;
+                        continue;
+                    }
+
+                    isEscaped = false;
+
+                    sb.append(ch);
+                    i++;
+
+                }
+            } else {
+                sb.append(ch);
+                i++;
+            }
         }
 
         return args.toArray(String[]::new);
