@@ -81,8 +81,10 @@ public class Shell {
             return;
 
         String path = instructions[1];
-        if (!isDirectoryExists(path))
+        if (!isDirectoryExists(path)) {
+            System.out.printf("cd: %s: No such file or directory\n", path);
             return;
+        }
 
         currentDirectory = Paths.get(path).toAbsolutePath();
     }
