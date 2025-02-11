@@ -12,7 +12,7 @@ public class Shell {
         cmds = new HashMap<>();
 
         cmds.put("exit", () -> exit());
-        cmds.put("echo", () -> echo());
+        // cmds.put("echo", () -> echo());
         cmds.put("type", () -> type());
         cmds.put("pwd", () -> pwd());
         cmds.put("cd", () -> cd());
@@ -139,7 +139,8 @@ public class Shell {
     }
 
     private boolean checkBuiltins(String cmdName) {
-        return cmds.containsKey(cmdName);
+        // considering echo as builting command
+        return cmds.containsKey(cmdName) || cmdName.equals("echo");
     }
 
     private String getPath(String cmdName) {
