@@ -214,7 +214,9 @@ public class Shell {
         int i = 0;
         while (i < input.length()) {
             char ch = input.charAt(i);
-            if (ch == ' ') {
+            char prev = i > 0 ? input.charAt(i - 1) : ' ';
+
+            if (prev != '\\' && ch == ' ') {
                 args.add(sb.toString());
                 sb = new StringBuilder("");
 
@@ -264,7 +266,8 @@ public class Shell {
 
                 }
             } else {
-                sb.append(ch);
+                if (ch != '\\')
+                    sb.append(ch);
                 i++;
             }
         }
