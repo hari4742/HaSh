@@ -4,9 +4,9 @@ import java.nio.file.*;
 
 public class Shell {
     private Map<String, Runnable> cmds;
+    private Path currentDirectory;
     String[] instructions;
     Scanner scanner;
-    Path currentDirectory;
 
     Shell() {
         cmds = new HashMap<>();
@@ -81,6 +81,14 @@ public class Shell {
             return;
 
         String path = instructions[1];
+
+        if (path.startsWith(".")) {
+            // handle the relative paths
+            path = String.format("%s\\%s", currentDirectory.toString(), path);
+            Path resolvedPath = Paths.get(path).normalize();
+            path = resolvedPath.toString();
+        }
+
         if (!isDirectoryExists(path)) {
             System.out.printf("cd: %s: No such file or directory\n", path);
             return;
