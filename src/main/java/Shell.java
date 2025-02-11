@@ -1,10 +1,12 @@
 import java.util.*;
 import java.io.*;
+import java.nio.file.*;
 
 public class Shell {
     private Map<String, Runnable> cmds;
     String[] instructions;
     Scanner scanner;
+    Path currentDirectory;
 
     Shell() {
         cmds = new HashMap<>();
@@ -13,7 +15,10 @@ public class Shell {
         cmds.put("echo", () -> echo());
         cmds.put("type", () -> type());
         cmds.put("pwd", () -> pwd());
+        cmds.put("cd", () -> cd());
         cmds.put("default", () -> userPrograms());
+
+        currentDirectory = Paths.get("").toAbsolutePath();
 
     }
 
@@ -68,8 +73,18 @@ public class Shell {
     }
 
     void pwd() {
-        String path = System.getProperty("user.dir");
-        System.out.println(path);
+        System.out.println(currentDirectory);
+    }
+
+    void cd() {
+        if (instructions.length < 2)
+            return;
+
+        String path = instructions[1];
+        if (!isDirectoryExists(path))
+            return;
+
+        currentDirectory = Paths.get(path).toAbsolutePath();
     }
 
     void userPrograms() {
@@ -112,7 +127,7 @@ public class Shell {
 
         for (String path : paths) {
             File folder = new File(path);
-            if (!folder.exists() || !folder.isDirectory())
+            if (!isDirectoryExists(path))
                 continue;
 
             File[] files = folder.listFiles(File::isFile);
@@ -138,4 +153,8 @@ public class Shell {
         return ":";
     }
 
+    private boolean isDirectoryExists(String path) {
+        File folder = new File(path);
+        return folder.exists() && folder.isDirectory();
+    }
 }
