@@ -84,9 +84,19 @@ public class Shell {
 
         if (path.startsWith(".")) {
             // handle the relative paths
-            path = String.format("%s/%s", currentDirectory.toString(), path);
-            Path resolvedPath = Paths.get(path).normalize();
-            path = resolvedPath.toString();
+            path = resolvePath(currentDirectory.toString(), path);
+
+        } else if (path.startsWith("~")) {
+            // handle home dir
+            String userHomeDir = System.getProperty("user.home");
+            if (path.length() > 1) {
+                path = path.substring(1);
+            } else {
+                path = "";
+            }
+
+            path = resolvePath(userHomeDir, path);
+
         }
 
         if (!isDirectoryExists(path)) {
@@ -132,7 +142,7 @@ public class Shell {
 
     private String getPath(String cmdName) {
         String PATH = System.getenv("PATH");
-        String pathSep = getPathSep();
+        String pathSep = getEnvPathSep();
         String[] paths = PATH.split(pathSep);
 
         for (String path : paths) {
@@ -155,7 +165,7 @@ public class Shell {
         return null;
     }
 
-    private String getPathSep() {
+    private String getEnvPathSep() {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win"))
             return ";";
@@ -163,8 +173,23 @@ public class Shell {
         return ":";
     }
 
+    private String getPathSep() {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win"))
+            return "\\";
+
+        return "/";
+    }
+
     private boolean isDirectoryExists(String path) {
         File folder = new File(path);
         return folder.exists() && folder.isDirectory();
+    }
+
+    private String resolvePath(String baseDir, String path) {
+        String pathSep = getPathSep();
+        path = String.format("%s%s%s", baseDir, pathSep, path);
+        Path resolvedPath = Paths.get(path).normalize();
+        return resolvedPath.toString();
     }
 }
