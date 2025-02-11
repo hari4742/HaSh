@@ -218,8 +218,10 @@ public class Shell {
                 i++;
 
                 // ignore extra white spaces between args
-                while (i < input.length() && ch == ' ')
+                while (i < input.length() && ch == ' ') {
                     i++;
+                    ch = input.charAt(i);
+                }
 
                 continue;
             } else if (ch == '\'') {
