@@ -30,7 +30,7 @@ public class Shell {
             System.out.print("$ ");
             input = scanner.nextLine();
             instructions = parseInput(input);
-
+            // System.out.println(Arrays.toString(instructions));
             String cmd = instructions[0];
 
             if (!cmds.containsKey(cmd))
@@ -228,7 +228,9 @@ public class Shell {
                     else
                         break;
                 }
-            } else if (ch == '\'') {
+            } else if (ch == '\\') {
+                i++;
+            } else if (prev != '\\' && ch == '\'') {
                 // add everything untill another next single quote appears
                 i++;
 
@@ -242,7 +244,7 @@ public class Shell {
                     sb.append(ch);
                     i++;
                 }
-            } else if (ch == '\"') {
+            } else if (prev != '\\' && ch == '\"') {
                 i++;
                 boolean isEscaped = false;
                 while (i < input.length() - 1) {
@@ -266,8 +268,7 @@ public class Shell {
 
                 }
             } else {
-                if (ch != '\\')
-                    sb.append(ch);
+                sb.append(ch);
                 i++;
             }
         }
