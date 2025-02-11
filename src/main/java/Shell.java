@@ -36,7 +36,7 @@ public class Shell {
                         System.out.println(input + ": command not found");
                         break;
                     }
-                    runProgram(path);
+                    runProgram();
                     break;
             }
 
@@ -74,9 +74,8 @@ public class Shell {
 
     }
 
-    void runProgram(String path) {
+    void runProgram() {
         List<String> cmd = Arrays.asList(instructions);
-        cmd.set(0, path);
 
         ProcessBuilder processBuilder = new ProcessBuilder(instructions);
         try {
