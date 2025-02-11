@@ -88,7 +88,10 @@ public class Shell {
 
         } else if (path.startsWith("~")) {
             // handle home dir
-            String userHomeDir = System.getProperty("user.home");
+            String userHomeDir = System.getenv("HOME");
+            // System.out.printf("---------------\nuser.home: %s\n-----------\nHOME:
+            // %s\n----------\n", userHomeDir,
+            // System.getenv("HOME"));
             if (path.length() > 1) {
                 path = path.substring(1);
             } else {
