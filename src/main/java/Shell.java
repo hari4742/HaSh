@@ -1,6 +1,7 @@
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
-import java.io.File;
+import java.io.*;
 
 public class Shell {
     String[] instructions;
@@ -30,7 +31,12 @@ public class Shell {
                     break;
 
                 default:
-                    System.out.println(input + ": command not found");
+                    String path = getPath(cmd);
+                    if (path == null) {
+                        System.out.println(input + ": command not found");
+                        break;
+                    }
+                    runProgram(path);
                     break;
             }
 
@@ -66,6 +72,28 @@ public class Shell {
 
         System.out.printf("%s: not found\n", cmdName);
 
+    }
+
+    void runProgram(String path) {
+        List<String> cmd = Arrays.asList(instructions);
+        cmd.set(0, path);
+
+        ProcessBuilder processBuilder = new ProcessBuilder(instructions);
+        try {
+            Process process = processBuilder.start();
+
+            // read output from the process
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            // wait untill process completes
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean checkBuiltins(String cmdName) {
