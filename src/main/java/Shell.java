@@ -29,7 +29,7 @@ public class Shell {
         do {
             System.out.print("$ ");
             input = scanner.nextLine();
-            instructions = input.split(" ");
+            instructions = parseInput(input);
             String cmd = instructions[0];
 
             if (!cmds.containsKey(cmd))
@@ -88,10 +88,8 @@ public class Shell {
 
         } else if (path.startsWith("~")) {
             // handle home dir
-            String userHomeDir = System.getenv("HOME");
-            // System.out.printf("---------------\nuser.home: %s\n-----------\nHOME:
-            // %s\n----------\n", userHomeDir,
-            // System.getenv("HOME"));
+            String userHomeDir = getHomeDir();
+
             if (path.length() > 1) {
                 path = path.substring(1);
             } else {
@@ -184,6 +182,14 @@ public class Shell {
         return "/";
     }
 
+    private String getHomeDir() {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win"))
+            return System.getProperty("user.home");
+
+        return System.getenv("HOME");
+    }
+
     private boolean isDirectoryExists(String path) {
         File folder = new File(path);
         return folder.exists() && folder.isDirectory();
@@ -195,4 +201,43 @@ public class Shell {
         Path resolvedPath = Paths.get(path).normalize();
         return resolvedPath.toString();
     }
+
+    private String[] parseInput(String input) {
+        // add space after input to added the last arg to list
+        input = String.format("%s ", input);
+
+        ArrayList<String> args = new ArrayList<>();
+
+        StringBuilder sb = new StringBuilder("");
+        int i = 0;
+        while (i < input.length()) {
+            char ch = input.charAt(i);
+            if (ch == ' ') {
+                args.add(sb.toString());
+                sb = new StringBuilder("");
+                i++;
+                continue;
+            } else if (ch == '\'') {
+                // add everything untill another next single quote appears
+                i++;
+
+                while (i < input.length() - 1) {
+                    ch = input.charAt(i);
+                    if (ch == '\'') {
+                        i++;
+                        break;
+                    }
+                    sb.append(ch);
+                    i++;
+                }
+                continue;
+            }
+
+            sb.append(ch);
+            i++;
+        }
+
+        return args.toArray(String[]::new);
+    }
+
 }
