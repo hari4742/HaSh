@@ -216,6 +216,11 @@ public class Shell {
                 args.add(sb.toString());
                 sb = new StringBuilder("");
                 i++;
+
+                // ignore extra white spaces between args
+                while (i < input.length() && ch == ' ')
+                    i++;
+
                 continue;
             } else if (ch == '\'') {
                 // add everything untill another next single quote appears
