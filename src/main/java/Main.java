@@ -21,8 +21,8 @@ public class Main {
                 case "echo":
                     for (int i = 1; i < instructions.length; i++) {
                         System.out.printf("%s ", instructions[i]);
-                        System.out.println();
                     }
+                    System.out.println();
                     break;
 
                 default:
