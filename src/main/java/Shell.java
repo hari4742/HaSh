@@ -88,7 +88,6 @@ public class Shell {
                 continue;
 
             for (File file : files) {
-                System.out.println(file);
                 String fileName = file.getName();
 
                 if (fileName.equals(cmdName))
