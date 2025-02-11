@@ -1,13 +1,24 @@
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.io.*;
 
 public class Shell {
+    private Map<String, Runnable> cmds;
     String[] instructions;
+    Scanner scanner;
+
+    Shell() {
+        cmds = new HashMap<>();
+
+        cmds.put("exit", () -> exit());
+        cmds.put("echo", () -> echo());
+        cmds.put("type", () -> type());
+        cmds.put("pwd", () -> pwd());
+        cmds.put("default", () -> userPrograms());
+
+    }
 
     public void repl() {
-        Scanner scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
         String input;
 
         do {
@@ -16,34 +27,16 @@ public class Shell {
             instructions = input.split(" ");
             String cmd = instructions[0];
 
-            switch (cmd) {
-                case "exit":
-                    exit();
-                    scanner.close();
-                    break;
+            if (!cmds.containsKey(cmd))
+                cmd = "default";
 
-                case "echo":
-                    echo();
-                    break;
-
-                case "type":
-                    type();
-                    break;
-
-                default:
-                    String path = getPath(cmd);
-                    if (path == null) {
-                        System.out.println(input + ": command not found");
-                        break;
-                    }
-                    runProgram();
-                    break;
-            }
+            cmds.get(cmd).run();
 
         } while (true);
     }
 
     void exit() {
+        scanner.close();
         System.exit(0);
     }
 
@@ -74,9 +67,22 @@ public class Shell {
 
     }
 
-    void runProgram() {
-        List<String> cmd = Arrays.asList(instructions);
+    void pwd() {
+        String path = System.getProperty("user.dir");
+        System.out.println(path);
+    }
 
+    void userPrograms() {
+        String cmd = instructions[0];
+        String path = getPath(cmd);
+        if (path == null) {
+            System.out.println(cmd + ": command not found");
+            return;
+        }
+        runProgram();
+    }
+
+    void runProgram() {
         ProcessBuilder processBuilder = new ProcessBuilder(instructions);
         try {
             Process process = processBuilder.start();
@@ -96,8 +102,7 @@ public class Shell {
     }
 
     private boolean checkBuiltins(String cmdName) {
-        String[] builtins = { "exit", "echo", "type" };
-        return Arrays.asList(builtins).contains(cmdName);
+        return cmds.containsKey(cmdName);
     }
 
     private String getPath(String cmdName) {
