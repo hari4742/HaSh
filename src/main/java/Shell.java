@@ -30,6 +30,7 @@ public class Shell {
             System.out.print("$ ");
             input = scanner.nextLine();
             instructions = parseInput(input);
+
             String cmd = instructions[0];
 
             if (!cmds.containsKey(cmd))
@@ -203,6 +204,7 @@ public class Shell {
     }
 
     private String[] parseInput(String input) {
+
         // add space after input to added the last arg to list
         input = String.format("%s ", input);
 
@@ -215,12 +217,14 @@ public class Shell {
             if (ch == ' ') {
                 args.add(sb.toString());
                 sb = new StringBuilder("");
-                i++;
 
                 // ignore extra white spaces between args
-                while (i < input.length() && ch == ' ') {
+                while (ch == ' ') {
                     i++;
-                    ch = input.charAt(i);
+                    if (i < input.length())
+                        ch = input.charAt(i);
+                    else
+                        break;
                 }
 
                 continue;
@@ -230,6 +234,7 @@ public class Shell {
 
                 while (i < input.length() - 1) {
                     ch = input.charAt(i);
+
                     if (ch == '\'') {
                         i++;
                         break;
