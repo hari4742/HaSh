@@ -84,7 +84,7 @@ public class Shell {
 
         if (path.startsWith(".")) {
             // handle the relative paths
-            path = String.format("%s\\%s", currentDirectory.toString(), path);
+            path = String.format("%s/%s", currentDirectory.toString(), path);
             Path resolvedPath = Paths.get(path).normalize();
             path = resolvedPath.toString();
         }
