@@ -261,6 +261,10 @@ public class Shell {
                         continue;
                     }
 
+                    if (isEscaped) {
+                        sb.append("\\");
+                    }
+
                     isEscaped = false;
 
                     sb.append(ch);
