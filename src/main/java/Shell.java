@@ -30,6 +30,7 @@ public class Shell {
             System.out.print("$ ");
             input = scanner.nextLine();
             instructions = parseInput(input);
+            instructions = handleRedirections();
             // System.out.println(Arrays.toString(instructions));
             String cmd = instructions[0];
 
@@ -229,6 +230,7 @@ public class Shell {
                         break;
                 }
             } else if (ch == '\\') {
+                // ignore the backslack
                 i++;
             } else if (prev != '\\' && ch == '\'') {
                 // add everything untill another next single quote appears
@@ -250,17 +252,21 @@ public class Shell {
                 while (i < input.length() - 1) {
                     ch = input.charAt(i);
 
+                    // stop when another " is seen
                     if (!isEscaped && ch == '\"') {
                         i++;
                         break;
                     }
 
+                    // mark to escape next char
                     if (!isEscaped && ch == '\\') {
                         isEscaped = true;
                         i++;
                         continue;
                     }
 
+                    // if already escapes but current charcter is not special then back slash is
+                    // preserved
                     if (isEscaped && (ch != '\\' && ch != '"')) {
                         sb.append("\\");
                     }
@@ -280,4 +286,55 @@ public class Shell {
         return args.toArray(String[]::new);
     }
 
+    private String[] handleRedirections() {
+        ArrayList<String> temp = new ArrayList<>();
+
+        for (int i = 0; i < instructions.length; i++) {
+            String instruction = instructions[i];
+
+            if (instruction.endsWith(">")) {
+
+                if (i + 1 >= instructions.length)
+                    continue; // path not given
+
+                String path = instructions[i + 1];
+
+                redirect(parseFileDescriptor(instruction), path, instruction.endsWith(">>"));
+                i++;
+
+            } else {
+                temp.add(instruction);
+            }
+        }
+
+        return temp.toArray(String[]::new);
+    }
+
+    void redirect(int fileDescriptor, String filePath, boolean append) {
+        try {
+
+            PrintStream stream = new PrintStream(new FileOutputStream(filePath, append));
+
+            switch (fileDescriptor) {
+                case 1:
+                    System.setOut(stream);
+                    break;
+                case 2:
+                    System.setErr(stream);
+                    break;
+                default:
+                    break;
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    int parseFileDescriptor(String instruction) {
+        char val = instruction.charAt(0);
+        if (Character.isDigit(val))
+            return Character.getNumericValue(val);
+        return 1;
+    }
 }
