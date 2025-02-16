@@ -30,6 +30,7 @@ public class Shell {
             System.out.print("$ ");
             input = scanner.nextLine();
             instructions = parseInput(input);
+            resetRedirections();
             instructions = handleRedirections();
             // System.out.println(Arrays.toString(instructions));
             String cmd = instructions[0];
@@ -308,6 +309,11 @@ public class Shell {
         }
 
         return temp.toArray(String[]::new);
+    }
+
+    void resetRedirections() {
+        System.setOut(System.out);
+        System.setErr(System.err);
     }
 
     void redirect(int fileDescriptor, String filePath, boolean append) {
