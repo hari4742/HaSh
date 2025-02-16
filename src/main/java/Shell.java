@@ -261,7 +261,7 @@ public class Shell {
                         continue;
                     }
 
-                    if (isEscaped) {
+                    if (isEscaped && (ch != '\\' && ch != '"')) {
                         sb.append("\\");
                     }
 
