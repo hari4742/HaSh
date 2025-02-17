@@ -5,10 +5,16 @@ import java.nio.file.*;
 public class Shell {
     private Map<String, Runnable> cmds;
     private Path currentDirectory;
+    private PrintStream originalOut;
+    private PrintStream originalErr;
     String[] instructions;
     Scanner scanner;
 
     Shell() {
+        // Store original System.out and System.err
+        originalOut = System.out;
+        originalErr = System.err;
+
         cmds = new HashMap<>();
 
         cmds.put("exit", () -> exit());
@@ -30,7 +36,6 @@ public class Shell {
             System.out.print("$ ");
             input = scanner.nextLine();
             instructions = parseInput(input);
-            resetRedirections();
             instructions = handleRedirections();
             // System.out.println(Arrays.toString(instructions));
             String cmd = instructions[0];
@@ -39,6 +44,7 @@ public class Shell {
                 cmd = "default";
 
             cmds.get(cmd).run();
+            resetRedirections();
 
         } while (true);
     }
@@ -312,8 +318,9 @@ public class Shell {
     }
 
     void resetRedirections() {
-        System.setOut(System.out);
-        System.setErr(System.err);
+        // Reset System.out and System.err to console
+        System.setOut(originalOut);
+        System.setErr(originalErr);
     }
 
     void redirect(int fileDescriptor, String filePath, boolean append) {
