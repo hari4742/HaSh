@@ -132,16 +132,29 @@ public class Shell {
         try {
             Process process = processBuilder.start();
 
-            // read output from the process
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
+            Thread stdoutThread = new Thread(() -> readStream(process.getInputStream(), System.out));
+            stdoutThread.start();
+
+            // Read stderr
+            Thread stderrThread = new Thread(() -> readStream(process.getErrorStream(), System.err));
+            stderrThread.start();
 
             // wait untill process completes
             process.waitFor();
+            stdoutThread.join();
+            stderrThread.join();
         } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void readStream(InputStream inputStream, PrintStream outputStream) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                outputStream.println(line);
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
