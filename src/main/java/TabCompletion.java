@@ -33,6 +33,8 @@ public class TabCompletion {
                     input = new StringBuilder(completion);
                     input.append(" ");
                     System.out.printf("%s ", completion);
+                } else {
+                    System.out.print("\\a"); // sending alert if not found
                 }
             }
             // Handle Backspace (127 in most Unix shells, 8 in others)
