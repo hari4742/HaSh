@@ -27,21 +27,26 @@ public class TabCompletion {
             }
             // Handle Tab key
             else if (key == 9) {
-                ArrayList<String> completion = findCompletion(input.toString());
-                if (completion.size() == 1) {
+                ArrayList<String> completions = findCompletion(input.toString());
+                if (completions.size() == 1) {
                     clearCurrentLine(input.length());
-                    input = new StringBuilder(completion.get(0));
+                    input = new StringBuilder(completions.get(0));
                     input.append(" ");
-                    System.out.printf("%s ", completion.get(0));
-                } else if (completion.size() > 1) {
-                    if (!prevTabPressed) {
+                    System.out.printf("%s ", completions.get(0));
+                } else if (completions.size() > 1) {
+                    String lcp = longestCommonPrefix(completions);
+                    if (!lcp.equals(input.toString())) {
+                        clearCurrentLine(input.length());
+                        input = new StringBuilder(lcp);
+                        System.out.print(lcp);
+                    } else if (!prevTabPressed) {
                         System.out.print("\u0007"); // sending alert if first tab
                         prevTabPressed = true;
                         continue;
                     } else {
                         System.out.println();
-                        for (int i = 0; i < completion.size(); i++) {
-                            System.out.printf("%s  ", completion.get(i));
+                        for (int i = 0; i < completions.size(); i++) {
+                            System.out.printf("%s  ", completions.get(i));
                         }
                         System.out.println();
                         System.out.printf("$ %s", input.toString());
@@ -104,6 +109,20 @@ public class TabCompletion {
                 }
             }
         }
+    }
+
+    public String longestCommonPrefix(ArrayList<String> strs) {
+        String s1 = strs.get(0);
+        String s2 = strs.get(strs.size() - 1);
+        int idx = 0;
+        while (idx < s1.length() && idx < s2.length()) {
+            if (s1.charAt(idx) == s2.charAt(idx)) {
+                idx++;
+            } else {
+                break;
+            }
+        }
+        return s1.substring(0, idx);
     }
 
     private void clearCurrentLine(int length) {
