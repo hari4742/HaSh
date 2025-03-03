@@ -28,6 +28,7 @@ public class Shell {
         currentDirectory = Paths.get("").toAbsolutePath();
         List<String> cmds = Arrays.asList("exit", "echo", "type", "pwd", "cd");
         tabCompletion = new TabCompletion(cmds);
+
     }
 
     public void repl() {
@@ -35,9 +36,10 @@ public class Shell {
         String input;
 
         do {
-            // System.out.print("$ ");
+            System.out.print("$ ");
             try {
-                input = tabCompletion.read();
+                // input = scanner.nextLine();
+                input = tabCompletion.readLine();
                 instructions = parseInput(input);
                 instructions = handleRedirections();
                 // System.out.println(Arrays.toString(instructions));
