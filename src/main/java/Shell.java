@@ -9,6 +9,7 @@ public class Shell {
     private PrintStream originalErr;
     String[] instructions;
     Scanner scanner;
+    TabCompletion tabCompletion;
 
     Shell() {
         // Store original System.out and System.err
@@ -25,7 +26,8 @@ public class Shell {
         cmds.put("default", () -> userPrograms());
 
         currentDirectory = Paths.get("").toAbsolutePath();
-
+        List<String> cmds = Arrays.asList("exit", "echo", "type", "pwd", "cd");
+        tabCompletion = new TabCompletion(cmds);
     }
 
     public void repl() {
@@ -33,18 +35,23 @@ public class Shell {
         String input;
 
         do {
-            System.out.print("$ ");
-            input = scanner.nextLine();
-            instructions = parseInput(input);
-            instructions = handleRedirections();
-            // System.out.println(Arrays.toString(instructions));
-            String cmd = instructions[0];
+            // System.out.print("$ ");
+            try {
+                input = tabCompletion.read();
+                instructions = parseInput(input);
+                instructions = handleRedirections();
+                // System.out.println(Arrays.toString(instructions));
+                String cmd = instructions[0];
 
-            if (!cmds.containsKey(cmd))
-                cmd = "default";
+                if (!cmds.containsKey(cmd))
+                    cmd = "default";
 
-            cmds.get(cmd).run();
-            resetRedirections();
+                cmds.get(cmd).run();
+                resetRedirections();
+
+            } catch (Exception e) {
+                System.exit(0);
+            }
 
         } while (true);
     }
