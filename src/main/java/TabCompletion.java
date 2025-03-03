@@ -31,7 +31,7 @@ public class TabCompletion {
                 if (completion != null) {
                     clearCurrentLine(input.length());
                     input = new StringBuilder(completion);
-                    System.out.print(completion);
+                    System.out.printf("%s ", completion);
                 }
             }
             // Handle Backspace (127 in most Unix shells, 8 in others)
