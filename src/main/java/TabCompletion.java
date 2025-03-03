@@ -16,7 +16,7 @@ public class TabCompletion {
 
     String readLine() throws IOException {
         StringBuilder input = new StringBuilder();
-
+        boolean prevTabPressed = false;
         while (true) {
             int key = System.in.read();
 
@@ -27,12 +27,25 @@ public class TabCompletion {
             }
             // Handle Tab key
             else if (key == 9) {
-                String completion = findCompletion(input.toString());
-                if (completion != null) {
+                ArrayList<String> completion = findCompletion(input.toString());
+                if (completion.size() == 1) {
                     clearCurrentLine(input.length());
-                    input = new StringBuilder(completion);
+                    input = new StringBuilder(completion.get(0));
                     input.append(" ");
-                    System.out.printf("%s ", completion);
+                    System.out.printf("%s ", completion.get(0));
+                } else if (completion.size() > 1) {
+                    if (!prevTabPressed) {
+                        System.out.print("\u0007"); // sending alert if first tab
+                        prevTabPressed = true;
+                        continue;
+                    } else {
+                        System.out.println();
+                        for (int i = 0; i < completion.size(); i++) {
+                            System.out.printf("%s  ", completion.get(i));
+                        }
+                        System.out.println();
+                        System.out.printf("$ %s", input.toString());
+                    }
                 } else {
                     System.out.print("\u0007"); // sending alert if not found
                 }
@@ -49,21 +62,24 @@ public class TabCompletion {
                 input.append((char) key);
                 System.out.print((char) key);
             }
+            prevTabPressed = false;
         }
     }
 
-    private String findCompletion(String prefix) {
-        String cmd = strings.stream()
-                .filter(word -> word.startsWith(prefix))
-                .findFirst()
-                .orElse(null);
-        if (cmd == null) {
-            cmd = findUserProgram(prefix);
+    private ArrayList<String> findCompletion(String prefix) {
+        ArrayList<String> cmds = new ArrayList<>();
+
+        for (int i = 0; i < strings.size(); i++) {
+            String cmd = strings.get(i);
+            if (cmd.startsWith(prefix))
+                cmds.add(cmd);
         }
-        return cmd;
+
+        findUserProgram(prefix, cmds);
+        return cmds;
     }
 
-    private String findUserProgram(String prefix) {
+    private void findUserProgram(String prefix, ArrayList<String> cmds) {
         String PATH = System.getenv("PATH");
         String pathSep = Shell.getEnvPathSep();
         String[] paths = PATH.split(pathSep);
@@ -81,12 +97,10 @@ public class TabCompletion {
                 String fileName = file.getName();
 
                 if (fileName.startsWith(prefix)) {
-                    return fileName;
+                    cmds.add(fileName);
                 }
             }
         }
-
-        return null;
     }
 
     private void clearCurrentLine(int length) {
