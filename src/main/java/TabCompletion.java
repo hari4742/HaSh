@@ -67,7 +67,7 @@ public class TabCompletion {
     }
 
     private ArrayList<String> findCompletion(String prefix) {
-        ArrayList<String> cmds = new ArrayList<>();
+        HashSet<String> cmds = new HashSet<>();
 
         for (int i = 0; i < strings.size(); i++) {
             String cmd = strings.get(i);
@@ -76,10 +76,13 @@ public class TabCompletion {
         }
 
         findUserProgram(prefix, cmds);
-        return cmds;
+
+        ArrayList<String> uniqueCmds = new ArrayList<>(cmds);
+        Collections.sort(uniqueCmds);
+        return uniqueCmds;
     }
 
-    private void findUserProgram(String prefix, ArrayList<String> cmds) {
+    private void findUserProgram(String prefix, HashSet<String> cmds) {
         String PATH = System.getenv("PATH");
         String pathSep = Shell.getEnvPathSep();
         String[] paths = PATH.split(pathSep);
