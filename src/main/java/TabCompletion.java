@@ -13,7 +13,7 @@ public class TabCompletion {
 
     public String read() throws IOException {
 
-        Terminal terminal = TerminalBuilder.terminal();
+        Terminal terminal = TerminalBuilder.builder().dumb(true).build();
         LineReader lineReader = LineReaderBuilder.builder().terminal(terminal).completer(new WordCompleter()).build();
         String prompt = "$ ";
         try {
