@@ -31,6 +31,7 @@ public class TabCompletion {
                 if (completion != null) {
                     clearCurrentLine(input.length());
                     input = new StringBuilder(completion);
+                    input.append(" ");
                     System.out.printf("%s ", completion);
                 }
             }
