@@ -197,7 +197,7 @@ public class Shell {
         return null;
     }
 
-    private String getEnvPathSep() {
+    public static String getEnvPathSep() {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win"))
             return ";";
@@ -221,7 +221,7 @@ public class Shell {
         return System.getenv("HOME");
     }
 
-    private boolean isDirectoryExists(String path) {
+    public static boolean isDirectoryExists(String path) {
         File folder = new File(path);
         return folder.exists() && folder.isDirectory();
     }

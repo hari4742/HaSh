@@ -53,10 +53,40 @@ public class TabCompletion {
     }
 
     private String findCompletion(String prefix) {
-        return strings.stream()
+        String cmd = strings.stream()
                 .filter(word -> word.startsWith(prefix))
                 .findFirst()
                 .orElse(null);
+        if (cmd == null) {
+            cmd = findUserProgram(prefix);
+        }
+        return cmd;
+    }
+
+    private String findUserProgram(String prefix) {
+        String PATH = System.getenv("PATH");
+        String pathSep = Shell.getEnvPathSep();
+        String[] paths = PATH.split(pathSep);
+
+        for (String path : paths) {
+            File folder = new File(path);
+            if (!Shell.isDirectoryExists(path))
+                continue;
+
+            File[] files = folder.listFiles(File::isFile);
+            if (files == null)
+                continue;
+
+            for (File file : files) {
+                String fileName = file.getName();
+
+                if (fileName.startsWith(prefix)) {
+                    return fileName;
+                }
+            }
+        }
+
+        return null;
     }
 
     private void clearCurrentLine(int length) {
