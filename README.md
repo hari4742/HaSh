@@ -36,7 +36,7 @@
 
 ### 🏃 Run with Prebuilt JAR (Recommended)
 
-1. Download the latest `hash.jar` from the Releases section.
+1. Download the latest `hash.jar` from the [Releases](https://github.com/hari4742/HaSh/releases) section.
 
 2. Open a terminal and run:
 
