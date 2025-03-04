@@ -139,6 +139,7 @@ public class Shell {
     void runProgram() {
         ProcessBuilder processBuilder = new ProcessBuilder(instructions);
         try {
+            processBuilder.directory(currentDirectory.toFile());
             Process process = processBuilder.start();
 
             Thread stdoutThread = new Thread(() -> readStream(process.getInputStream(), System.out));
