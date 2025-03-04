@@ -1,35 +1,77 @@
-[![progress-banner](https://backend.codecrafters.io/progress/shell/96807b87-91af-4014-b94b-ed99836e5379)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
+# 🐚 HaSh - Hari's Shell
 
-This is a starting point for Java solutions to the
-["Build Your Own Shell" Challenge](https://app.codecrafters.io/courses/shell/overview).
+**HaSh** _(Hari's Shell)_ is a custom POSIX-compliant shell built from scratch in Java as a learning project. It provides an interactive command-line experience with essential shell functionalities, inspired by Unix-like shells. The goal of this project is to explore system programming concepts, shell internals, and command parsing while gradually adding new features.
 
-In this challenge, you'll build your own POSIX compliant shell that's capable of
-interpreting shell commands, running external programs and builtin commands like
-cd, pwd, echo and more. Along the way, you'll learn about shell command parsing,
-REPLs, builtin commands, and more.
+## ✨ Features
 
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
+✅ **Built-in Commands:** Includes `exit`, `type`, `echo`, `cd`, and `pwd`.
 
-# Passing the first stage
+✅ **POSIX-style Quoting & Escaping:** Supports single quotes, double quotes, and backslash escaping.
 
-The entry point for your `shell` implementation is in `src/main/java/Main.java`.
-Study and uncomment the relevant code, and push your changes to pass the first
-stage:
+✅ **Redirection Operators:** Handles input/output redirection for seamless command execution.
+
+✅ **Auto-Completion:** Suggests commands on tab press for a smoother experience.
+
+✅ **External Program Execution:** Runs system commands and executables like `ls`, `cat`, etc.
+
+✅ **Shell Command Parsing:** Processes complex shell commands with arguments and options.
+
+✅ **REPL (Read-Eval-Print Loop):** Interactive session for executing multiple commands.
+
+✅ **Maven Build:** Easily compile and run with Maven.
+
+🚀 **Planned Features:**
+
+🔹 Auto Completion for paths
+
+🔹 Command History
+
+🔹 Piping (`|`)
+
+🔹 Job Control (background processes)
+
+🔹 More Built-in Utilities
+
+## 🛠 Installation
+
+### 🏃 Run with Prebuilt JAR (Recommended)
+
+1. Download the latest `hash.jar` from the Releases section.
+
+2. Open a terminal and run:
 
 ```sh
-git commit -am "pass 1st stage" # any msg
-git push origin master
+java -jar hash.jar
 ```
 
-Time to move on to the next stage!
+## 🏗️ Build from Source
 
-# Stage 2 & beyond
+If you want to modify or contribute:
 
-Note: This section is for stages 2 and beyond.
+```sh
+git clone https://github.com/hari4742/HaSh.git
+cd HaSh
+mvn package
+java -jar target/hash.jar
+```
 
-1. Ensure you have `mvn` installed locally
-1. Run `./your_program.sh` to run your program, which is implemented in
-   `src/main/java/Main.java`.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
+## 📺 Preview
+
+When you launch HaSh, you’ll be greeted with:
+
+```text
+ _    _        _____ _
+| |  | |      / ____| |
+| |__| | __ _| (___ | |__
+|  __  |/ _` |\___ \| '_ \
+| |  | | (_| |____) | | | |
+|_|  |_|\__,_|_____/|_| |_|
+
+Welcome to HaSh - Hari's Shell!
+```
+
+## 🙌 Acknowledgments
+
+- This project is build with guidance of codecrafters as part of the ["Build Your Own Shell" Challenge](https://app.codecrafters.io/courses/shell/overview).
+
+- Special thanks to CodeCrafters. Learn more about them [here](./code-crafters.md).
