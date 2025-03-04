@@ -1,0 +1,50 @@
+name: Build and Release HaSh
+
+on:
+  push:
+    tags:
+      - "v*" # Runs on tag push like v1.0.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎 Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 🔧 Set Up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "23"
+
+      - name: 🏗 Build with Maven
+        run: mvn clean package
+
+      - name: 📦 Upload JAR as an Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: hash-jar
+          path: target/hash.jar
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎 Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 📥 Download Built JAR
+        uses: actions/download-artifact@v3
+        with:
+          name: hash-jar
+          path: .
+
+      - name: 🚀 Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: hash.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
