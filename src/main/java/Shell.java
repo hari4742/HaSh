@@ -373,4 +373,20 @@ public class Shell {
             return Character.getNumericValue(val);
         return 1;
     }
+
+    public void printWelcomeMessage() {
+        String banner = """
+                  _    _        _____ _
+                 | |  | |      / ____| |
+                 | |__| | __ _| (___ | |__
+                 |  __  |/ _` |\\___ \\| '_ \\
+                 | |  | | (_| |____) | | | |
+                 |_|  |_|\\__,_|_____/|_| |_|
+
+
+                 Welcome to HaSh - Hari's Shell!
+                """;
+        System.out.println(banner);
+    }
+
 }
