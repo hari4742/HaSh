@@ -23,7 +23,7 @@ jobs:
         run: mvn clean package
 
       - name: 📦 Upload JAR as an Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: hash-jar
           path: target/hash.jar
